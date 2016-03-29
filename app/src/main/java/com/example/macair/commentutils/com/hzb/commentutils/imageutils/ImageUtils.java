@@ -85,6 +85,7 @@ public class ImageUtils {
      * @param reqHeight
      * @return
      */
+    
     public static Bitmap decodeSampledBitmapFromResource (Resources res, int resId, int reqWidth, int reqHeight) {
 
         final BitmapFactory.Options options = new BitmapFactory.Options();
