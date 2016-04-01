@@ -6,10 +6,13 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 
+import com.example.macair.commentutils.Utils;
+
+import java.io.ByteArrayOutputStream;
 import java.util.ResourceBundle;
 
 /**
- * Created by macair on 16/3/29.
+ * Created by huangzhebin on 16/3/29.
  */
 public class ImageUtils {
 
@@ -85,7 +88,7 @@ public class ImageUtils {
      * @param reqHeight
      * @return
      */
-    
+
     public static Bitmap decodeSampledBitmapFromResource (Resources res, int resId, int reqWidth, int reqHeight) {
 
         final BitmapFactory.Options options = new BitmapFactory.Options();
@@ -108,6 +111,22 @@ public class ImageUtils {
         options.inJustDecodeBounds = false;
         Bitmap src = BitmapFactory.decodeFile(pathName, options);
         return createScaleBitmap(src, reqWidth, reqHeight);
+    }
+
+    /**
+     * bitmap转换为字节数组
+     * @param bitmap
+     * @param needRecyle
+     * @return
+     */
+    public static byte[] bmp2ByteArray (Bitmap bitmap, boolean needRecyle) {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+        if (needRecyle)
+            bitmap.recycle();
+        byte[] result = outputStream.toByteArray();
+        Utils.close(outputStream);
+        return result;
     }
 
 
