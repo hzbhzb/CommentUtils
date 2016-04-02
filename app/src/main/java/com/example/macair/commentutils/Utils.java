@@ -1,16 +1,21 @@
 package com.example.macair.commentutils;
 
+import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningAppProcessInfo;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
+import android.os.Environment;
+import android.os.StatFs;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.WindowManager;
 
 import java.io.Closeable;
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -109,6 +114,25 @@ public class Utils {
                 System.out.println(obj);
             }
         }
+    }
+
+    public static File getDiskCecheDir (Context context, String uniqueueName) {
+        boolean externalStorageAvailable = Environment.getExternalStorageState().endsWith(Environment.MEDIA_MOUNTED);
+        final String cachePath;
+        if (externalStorageAvailable) {
+            cachePath = context.getExternalCacheDir().getPath();
+        } else {
+            cachePath = context.getCacheDir().getPath();
+        }
+        return new File(cachePath + File.separator + uniqueueName);
+    }
+    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
+    public static long getUsableSpace (File file) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+            return file.getUsableSpace();
+        }
+        final StatFs statFs = new StatFs(file.getPath());
+        return (long)statFs.getAvailableBlocks() * (long)statFs.getBlockSize();
     }
 
 
