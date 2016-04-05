@@ -17,6 +17,8 @@ import android.view.WindowManager;
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 /**
@@ -46,7 +48,7 @@ public class Utils {
                 closeable.close();
         } catch (IOException e) {
             e.printStackTrace();
-            ;
+
         }
     }
 
@@ -133,6 +135,30 @@ public class Utils {
         }
         final StatFs statFs = new StatFs(file.getPath());
         return (long)statFs.getAvailableBlocks() * (long)statFs.getBlockSize();
+    }
+
+     public static  String hexKeyFromUrl(String url) {
+         String hexKey = null;
+         try {
+            final MessageDigest md = MessageDigest.getInstance("Md5");
+             md.update(url.getBytes());
+             hexKey = bytes2HexString(md.digest());
+         } catch (NoSuchAlgorithmException e) {
+             e.printStackTrace();;
+         }
+         return hexKey;
+     }
+
+    public static String bytes2HexString(byte[] digest) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < digest.length; i++) {
+            String hex = Integer.toHexString(0XFF & digest[i]);
+            if (hex.length() == 1) {
+                sb.append("0");
+            }
+            sb.append(hex);
+        }
+        return sb.toString();
     }
 
 
